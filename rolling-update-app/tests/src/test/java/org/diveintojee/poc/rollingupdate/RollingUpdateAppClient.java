@@ -21,7 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @Component
-public class ClusterAppClient {
+public class RollingUpdateAppClient {
 
     @Autowired
     RestOperations restTemplate;

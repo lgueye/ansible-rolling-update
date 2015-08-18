@@ -21,15 +21,15 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {ClusterTestConfig.class})
+@ContextConfiguration(classes = {RollingUpdateTestConfig.class})
 public class DomainResourceTestIT {
 
     @Autowired
-    private ClusterAppClient api;
+    private RollingUpdateAppClient api;
     @Autowired
     private RestOperations restTemplate;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ClusterAppClient.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RollingUpdateAppClient.class);
 
     @Test
     public void crudDomainShouldSucceed() throws IOException {

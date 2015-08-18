@@ -19,7 +19,7 @@ import static com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT;
 @Configuration
 @ComponentScan
 @PropertySource(value = "file:app1-tests.properties")
-public class ClusterTestConfig {
+public class RollingUpdateTestConfig {
 
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
