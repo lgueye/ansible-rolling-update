@@ -4,15 +4,12 @@
     <groupId>org.diveintojee.poc.digitaloceancluster</groupId>
     <artifactId>rolling-update-app-root</artifactId>
     <name>rolling-update-app-root</name>
-    <!--<version>0.0.2-SNAPSHOT</version>-->
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
         <module>domain</module>
         <module>api</module>
         <module>tests</module>
-        <!--<module>db-upgrader</module>-->
-        <!--<module>index-upgrader</module>-->
     </modules>
     <properties>
         <java.version>1.7</java.version>
