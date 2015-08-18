@@ -1,0 +1,4 @@
+---
+galaxy_info:
+  author: Louis Gueye
+  description: An Ansible role for sharing vars accross roles.

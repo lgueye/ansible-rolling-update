@@ -1,0 +1,12 @@
+---
+- name: create nodemanager user
+  user: name="{{ node_management_user }}" shell=/bin/bash
+
+- name: add authorized key to nodemanager
+  authorized_key: user="{{ node_management_user }}" key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
+- name: add nodemanager to sudoers
+  action: lineinfile dest=/etc/sudoers regexp="{{ node_management_user }} ALL" line="{{ node_management_user }} ALL=(ALL:ALL) NOPASSWD:ALL" state=present
+
+#- name: droplets | debug
+#  debug: msg="{{ members }}"

@@ -1,0 +1,6 @@
+---
+- name: installs util packages
+  apt: name={{ item }} state=present install_recommends=no update_cache=no
+  with_items:
+    - curl
+    - vim
