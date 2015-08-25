@@ -1,0 +1,104 @@
+---
+- hosts: "localhost"
+  connection: "local"
+  vars:
+    ssh_known_hosts_file: "~/.ssh/known_hosts"
+  var_file: "shared/vars/main.yml"
+
+  tasks:
+  - name: droplets | create
+    digital_ocean: state="active" command="droplet" name="{{ item }}" size_id="62" region_id="2" image_id="13089493" ssh_key_ids="625455" wait_timeout="500" unique_name="yes"
+    with_items:
+      - "rolling-update-app-1"
+      - "rolling-update-app-2"
+      - "rolling-update-app-3"
+      - "lb"
+    register: droplets
+
+#  - name: droplets | export as facts
+#    set_fact: do_instances="{{ droplets.results }}"
+#
+#  - name: droplets | debug
+#    debug: msg="{{ droplets.results }}"
+#
+  - name: droplets | register test IP
+    add_host: name="{{ item.droplet.ip_address }}" groups="rolling-update-app"
+    when: "'rolling-update-app' in item.droplet.name"
+    with_items: droplets.results
+
+  - name: droplets | register production IP
+    add_host: name="{{ item.droplet.ip_address }}" groups="lb"
+    when: "'lb' in item.droplet.name"
+    with_items: droplets.results
+
+  - name: make sure the known hosts file exists
+    file: path="{{ ssh_known_hosts_file }}" state="touch"
+
+  - name: droplets | remove from known hosts
+    shell: "ssh-keygen -R {{ item.droplet.ip_address }}"
+    with_items: droplets.results
+
+  - name: droplets | add to know hosts
+    shell: "ssh-keyscan -H -T 10 {{ item.droplet.ip_address }} >> {{ ssh_known_hosts_file }}"
+    with_items: droplets.results
+
+- hosts: "rolling-update-app,lb"
+  remote_user: "root"
+  roles:
+  - {role: "security"}
+
+- hosts: "localhost"
+  connection: "local"
+  roles:
+  - {role: "clone-app", rev: "{{ app_rev1 }}" }
+
+- hosts: "rolling-update-app"
+  remote_user: "{{ node_management_user }}"
+  sudo: "yes"
+  taks:
+  - name: application | register stats for source link
+    stat: path="{{ app.node_source_link_path }}/{{ app_rev1 }}/rolling-update-app-api.jar"
+    register: "app_rev1_stats"
+
+- hosts: "rolling-update-app"
+  remote_user: "{{ node_management_user }}"
+  sudo: "yes"
+  roles:
+  - {role: "deploy-app", rev: "{{ app_rev1 }}", when: "app_rev1_stats.stat.exists == false"}
+  - {role: "start-app"}
+
+- hosts: "lb"
+  remote_user: "nodemanager"
+  sudo: "yes"
+  roles:
+  - {role: "lb", , when: "app_rev1_stats.stat.exists == false"}
+
+- hosts: "rolling-update-app"
+  remote_user: "{{ node_management_user }}"
+  sudo: "yes"
+  roles:
+  - {role: "test-app"}
+  - {role: "clone-app", rev: "{{ app_rev2 }}"}
+
+- hosts: "rolling-update-app"
+  remote_user: "{{ node_management_user }}"
+  sudo: "yes"
+  taks:
+  - name: application | register stats for source link
+    stat: path="{{ app.node_source_link_path }}/{{ app_rev2 }}/rolling-update-app-api.jar"
+    register: "app_rev2_stats"
+
+
+- hosts: "rolling-update-app"
+  remote_user: "{{ node_management_user }}"
+  sudo: "yes"
+  roles:
+  - {role: "rolling-update", rev: "{{ app_rev2 }}", when: "app_rev2_stats.stat.exists == false"}
+  - {role: "test-app"}
+
+- hosts: "localhost"
+  connection: "local"
+  tasks:
+  - name:  droplets | delete
+    digital_ocean: state="deleted" command="droplet" id="{{ item.droplet.id }}" ssh_key_ids="625455" wait_timeout="500"
+    with_items: droplets.results

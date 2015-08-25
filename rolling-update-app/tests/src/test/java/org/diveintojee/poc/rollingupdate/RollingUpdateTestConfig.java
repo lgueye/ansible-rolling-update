@@ -18,7 +18,7 @@ import static com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT;
  */
 @Configuration
 @ComponentScan
-@PropertySource(value = "file:app1-tests.properties")
+@PropertySource(value = "classpath:rolling-update-app-tests.properties")
 public class RollingUpdateTestConfig {
 
     @Bean

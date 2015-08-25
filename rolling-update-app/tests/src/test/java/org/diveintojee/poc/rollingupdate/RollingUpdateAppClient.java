@@ -25,9 +25,9 @@ public class RollingUpdateAppClient {
 
     @Autowired
     RestOperations restTemplate;
-    @Value("${app1.host}")
+    @Value("${app.host}")
     private String host;
-    @Value("${app1.port}")
+    @Value("${app.port}")
     private int port;
 
     private String getResourceLocation() {

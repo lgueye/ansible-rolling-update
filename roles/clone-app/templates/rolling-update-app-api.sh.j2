@@ -1,0 +1,51 @@
+#!/bin/bash
+
+export APP_HOME=/opt/rolling-update-app-api
+export APP_NAME=rolling-update-app-api
+export APP_PORT={{ app.management.port }}
+
+echo "Service [$APP_NAME] - [$1]"
+
+echo "    APP_HOME=$APP_HOME"
+echo "    APP_NAME=$APP_NAME"
+echo "    APP_PORT=$APP_PORT"
+
+function start {
+    if pkill -0 -f $APP_NAME.jar > /dev/null 2>&1
+    then
+        echo "Service [$APP_NAME] is already running. Ignoring startup request."
+        exit 1
+    fi
+    echo "Starting application..."
+    nohup java -jar $APP_HOME/$APP_NAME.jar \
+        --spring.config.location=$APP_HOME/   \
+        --spring.config.name=$APP_NAME   \
+        --spring.logging.config=$APP_HOME/logback.xml   \
+        < /dev/null > /tmp/$APP_NAME.log 2>&1 &
+}
+
+function stop {
+    if ! pkill -0 -f $APP_NAME.jar > /dev/null 2>&1
+    then
+        echo "Service [$APP_NAME] is not running. Ignoring shutdown request."
+        exit 1
+    fi
+
+    # First, we will try to trigger a controlled shutdown using
+    # spring-boot-actuator
+    curl -X POST http://localhost:$APP_PORT/shutdown
+}
+
+case $1 in
+start)
+    start
+;;
+stop)
+    stop
+;;
+restart)
+    stop
+    start
+;;
+esac
+exit 0

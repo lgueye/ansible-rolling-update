@@ -1,39 +1,15 @@
 ---
 node_management_user: "nodemanager"
-db:
-  ip: "{{ hostvars[groups['db'][0]]['ansible_eth0']['ipv4']['address'] }}"
-  alias: "db"
-  port: 3306
-  admin_user: "root"
-  admin_password: "{{ db_admin_password }}"
-index:
-  ip: "{{ hostvars[groups['index'][0]]['ansible_eth0']['ipv4']['address'] }}"
-  alias: "index"
-  version: "1.4"
-  ports:
-    tcp: 9300
-    http: 9200
-  cluster:
-    name: "appcluster"
-logserver:
-  rsyslog:
-    port: 514
-    ip: "{{ hostvars[groups['logserver'][0]]['ansible_eth0']['ipv4']['address'] }}"
-    alias: "logserver"
-app1:
+app:
   port: 8080
   management:
     port: 8081
-  logging_file: "/var/log/app1-api"
-  repo: "https://github.com/lgueye/app1.git"
-  clonedir: "/tmp"
-  pidfile: "/var/run/app1-api.pid"
-  db:
-    user: "app1"
-    user_password: "{{ db_user_password }}"
-    name: "app1"
-    driver: "com.mysql.jdbc.Driver"
-    url: "jdbc:mysql://{{ db.ip }}:{{ db.port }}/app1?autoReconnect=true"
+  logging_file: "/var/log/rolling-update-app-api"
+  repo: "https://github.com/lgueye/ansible-rolling-update.git"
+  local_project_path: "/tmp/ansible-rolling-update"
+  local_app_path: "/tmp/ansible-rolling-update/rolling-update-app"
+  node_target_link_path: "/opt/rolling-update-app-api"
+  node_source_link_path: "/opt/java-apps/rolling-update-app-api"
 lb:
   port: 80
   ip: "{{ hostvars[groups['lb'][0]]['ansible_eth0']['ipv4']['address'] }}"

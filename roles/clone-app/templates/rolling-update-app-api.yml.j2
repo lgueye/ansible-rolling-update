@@ -1,0 +1,9 @@
+logging:
+  file: "{{ app.logging_file}}"
+
+management:
+  port: "{{ app.management.port }}"
+
+endpoints:
+  shutdown:
+    enabled: true

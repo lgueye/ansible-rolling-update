@@ -1,0 +1,9 @@
+#!/bin/bash
+# description: app1-api start stop restart
+# processname: app1-api
+# chkconfig: 234 20 80
+
+./opt/rolling-update-app-api/rolling-update-app-api.sh $1
+
+
+exit 0

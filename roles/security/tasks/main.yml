@@ -7,6 +7,3 @@
 
 - name: add nodemanager to sudoers
   action: lineinfile dest=/etc/sudoers regexp="{{ node_management_user }} ALL" line="{{ node_management_user }} ALL=(ALL:ALL) NOPASSWD:ALL" state=present
-
-#- name: droplets | debug
-#  debug: msg="{{ members }}"

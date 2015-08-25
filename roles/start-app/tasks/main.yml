@@ -1,0 +1,7 @@
+---
+# Start app
+- name: ensure service is started
+  service: name="rolling-update-app-api" state="started"
+
+- name: unix service | wait for port to be up
+  wait_for: port="{{ app.port }}" delay=10

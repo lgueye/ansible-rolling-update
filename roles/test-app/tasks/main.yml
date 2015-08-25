@@ -1,0 +1,12 @@
+---
+#- name: app-tests | configure
+#  template: src="rolling-update-app-tests.properties.j2" dest="{{ app.local_app_path }}/tests/target/test-classes/rolling-update-app-tests.properties"
+
+#- name: app-tests | wait 20 s
+#  pause: seconds="20"
+
+- name: app-tests | run
+  shell: mvn verify -Prun-tests
+  args:
+    chdir: "{{ app.local_app_path }}/tests"
+
