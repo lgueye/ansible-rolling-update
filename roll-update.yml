@@ -3,16 +3,17 @@
   connection: "local"
   vars:
     ssh_known_hosts_file: "~/.ssh/known_hosts"
-  var_file: "shared/vars/main.yml"
+  vars_files:
+  - "roles/shared/vars/main.yml"
 
   tasks:
   - name: droplets | create
     digital_ocean: state="active" command="droplet" name="{{ item }}" size_id="62" region_id="2" image_id="13089493" ssh_key_ids="625455" wait_timeout="500" unique_name="yes"
     with_items:
-      - "rolling-update-app-1"
-      - "rolling-update-app-2"
-      - "rolling-update-app-3"
-      - "lb"
+    - "rolling-update-app-1"
+    - "rolling-update-app-2"
+    - "rolling-update-app-3"
+    - "lb"
     register: droplets
 
 #  - name: droplets | export as facts
@@ -55,7 +56,8 @@
 - hosts: "rolling-update-app"
   remote_user: "{{ node_management_user }}"
   sudo: "yes"
-  taks:
+
+  tasks:
   - name: application | register stats for source link
     stat: path="{{ app.node_source_link_path }}/{{ app_rev1 }}/rolling-update-app-api.jar"
     register: "app_rev1_stats"
@@ -71,7 +73,7 @@
   remote_user: "nodemanager"
   sudo: "yes"
   roles:
-  - {role: "lb", , when: "app_rev1_stats.stat.exists == false"}
+  - {role: "lb", when: "app_rev1_stats.stat.exists == false"}
 
 - hosts: "rolling-update-app"
   remote_user: "{{ node_management_user }}"
@@ -83,11 +85,11 @@
 - hosts: "rolling-update-app"
   remote_user: "{{ node_management_user }}"
   sudo: "yes"
-  taks:
+
+  tasks:
   - name: application | register stats for source link
     stat: path="{{ app.node_source_link_path }}/{{ app_rev2 }}/rolling-update-app-api.jar"
     register: "app_rev2_stats"
-
 
 - hosts: "rolling-update-app"
   remote_user: "{{ node_management_user }}"
@@ -98,6 +100,7 @@
 
 - hosts: "localhost"
   connection: "local"
+
   tasks:
   - name:  droplets | delete
     digital_ocean: state="deleted" command="droplet" id="{{ item.droplet.id }}" ssh_key_ids="625455" wait_timeout="500"
