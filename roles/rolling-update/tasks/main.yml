@@ -8,47 +8,33 @@
 - name: ensure service is stopped
   service: name="rolling-update-app-api" state="stopped"
 
-# Deploy app
-#- name: register stats for source link
-#  stat: path="{{ app.node_source_link_path }}/{{ rev }}/rolling-update-app-api.jar"
-#  register: "target_app_stats"
-
 - name: create deploy dir if source link does not exist
   file: state="directory" dest="{{ app.node_source_link_path }}/{{ rev }}"
-#  when: target_app_stats.stat.exists == False
 
 - name: unlink target link
   file: state="absent" dest="{{ app.node_target_link_path }}"
-#  when: target_app_stats.stat.exists == False
 
 - name: link target link
   file: state="link" src="{{ app.node_source_link_path }}/{{ rev }}" dest="{{ app.node_target_link_path }}"
-#  when: target_app_stats.stat.exists == False
 
 - name: copy jar
   copy: src="{{ app.local_app_path }}/api/target/rolling-update-app-api.jar" dest="{{ app.node_target_link_path }}/"
-#  when: target_app_stats.stat.exists == False
 
 - name: copy app config
   copy: src="{{ app.local_app_path }}/api/target/rolling-update-app-api.yml" dest="{{ app.node_target_link_path }}/"
-#  when: target_app_stats.stat.exists == False
 
 - name: copy log config
   copy: src="{{ app.local_app_path }}/api/target/logback.xml" dest="{{ app.node_target_link_path }}/"
-#  when: target_app_stats.stat.exists == False
 
-#- name: unix service | copy config
-#  template: src="rolling-update-rolling-update-app-api.sh.j2" dest="{{ app.node_target_link_path }}/rolling-update-app-api.sh" mode="u=xrw,g=xr,o=r"
 - name: unix service | copy config
-  copy: src="{{ app.local_app_path }}/api/target/classes/rolling-update-rolling-update-app-api.sh" dest="{{ app.node_target_link_path }}/" mode="u=xrw,g=xr,o=r"
+  copy: src="{{ app.local_app_path }}/api/target/classes/rolling-update-app-api.sh" dest="{{ app.node_target_link_path }}/" mode="u=xrw,g=xr,o=r"
 
 # Start app
 - name: ensure service is started
   service: name="rolling-update-app-api" state="started"
-#  when: target_app_stats.stat.exists == False
 
 - name: unix service | wait for port to be up
-  wait_for: port="{{ app.port }}" delay=10
+  wait_for: port="{{ app.port }}" delay=10 timeout="20"
 
 # Enable host on LB
 - name: enable host on lb

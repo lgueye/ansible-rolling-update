@@ -4,7 +4,7 @@
   register: "target_app_stats"
 
 - name: delete clonedir if needed
-  command: rm -fr {{ app.local_project_path }}
+  file: name="{{ app.local_project_path }}" state="absent"
   when: target_app_stats.stat.exists == true
 
 - name: clone
@@ -20,7 +20,7 @@
   copy: src="logback.xml" dest="{{ app.local_app_path }}/api/target/classes/logback.xml"
 
 - name: configure unix service
-  template: src="rolling-update-rolling-update-app-api.sh.j2" dest="{{ app.local_app_path }}/api/target/classes/rolling-update-app-api.sh" mode="u=xrw,g=xr,o=r"
+  template: src="rolling-update-app-api.sh.j2" dest="{{ app.local_app_path }}/api/target/classes/rolling-update-app-api.sh" mode="u=xrw,g=xr,o=r"
 
 - name: configure tests
   template: src="rolling-update-app-tests.properties.j2" dest="{{ app.local_app_path }}/tests/target/test-classes/rolling-update-app-tests.properties"

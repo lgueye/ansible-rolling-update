@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export APP_HOME=/opt/rolling-update-app-api
+export APP_HOME={{ app.node_target_link_path }}
 export APP_NAME=rolling-update-app-api
 export APP_PORT={{ app.management.port }}
 

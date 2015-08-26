@@ -3,8 +3,6 @@
   connection: "local"
   vars:
     ssh_known_hosts_file: "~/.ssh/known_hosts"
-  vars_files:
-  - "roles/shared/vars/main.yml"
 
   tasks:
   - name: droplets | create
@@ -22,12 +20,12 @@
 #  - name: droplets | debug
 #    debug: msg="{{ droplets.results }}"
 #
-  - name: droplets | register test IP
+  - name: droplets | register app IP
     add_host: name="{{ item.droplet.ip_address }}" groups="rolling-update-app"
     when: "'rolling-update-app' in item.droplet.name"
     with_items: droplets.results
 
-  - name: droplets | register production IP
+  - name: droplets | register lb IP
     add_host: name="{{ item.droplet.ip_address }}" groups="lb"
     when: "'lb' in item.droplet.name"
     with_items: droplets.results
@@ -43,7 +41,7 @@
     shell: "ssh-keyscan -H -T 10 {{ item.droplet.ip_address }} >> {{ ssh_known_hosts_file }}"
     with_items: droplets.results
 
-- hosts: "rolling-update-app,lb"
+- hosts: "rolling-update-app:lb"
   remote_user: "root"
   roles:
   - {role: "security"}
@@ -56,6 +54,8 @@
 - hosts: "rolling-update-app"
   remote_user: "{{ node_management_user }}"
   sudo: "yes"
+  vars_files:
+  - "roles/shared/vars/main.yml"
 
   tasks:
   - name: application | register stats for source link
@@ -66,25 +66,33 @@
   remote_user: "{{ node_management_user }}"
   sudo: "yes"
   roles:
-  - {role: "deploy-app", rev: "{{ app_rev1 }}", when: "app_rev1_stats.stat.exists == false"}
+  - {role: "java"}
+#  - {role: "deploy-app", rev: "{{ app_rev1 }}", when: "app_rev1_stats.stat.exists == false"}
+  - {role: "deploy-app", rev: "{{ app_rev1 }}"}
   - {role: "start-app"}
 
 - hosts: "lb"
   remote_user: "nodemanager"
   sudo: "yes"
   roles:
-  - {role: "lb", when: "app_rev1_stats.stat.exists == false"}
+  - {role: "lb"}
+
+- hosts: "localhost"
+  connection: "local"
+  roles:
+  - {role: "test-app"}
 
 - hosts: "rolling-update-app"
   remote_user: "{{ node_management_user }}"
   sudo: "yes"
   roles:
-  - {role: "test-app"}
   - {role: "clone-app", rev: "{{ app_rev2 }}"}
 
 - hosts: "rolling-update-app"
   remote_user: "{{ node_management_user }}"
   sudo: "yes"
+  vars_files:
+  - "roles/shared/vars/main.yml"
 
   tasks:
   - name: application | register stats for source link
@@ -100,6 +108,8 @@
 
 - hosts: "localhost"
   connection: "local"
+  roles:
+  - {role: "test-app"}
 
   tasks:
   - name:  droplets | delete
