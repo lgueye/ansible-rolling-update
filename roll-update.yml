@@ -14,12 +14,6 @@
     - "lb"
     register: droplets
 
-#  - name: droplets | export as facts
-#    set_fact: do_instances="{{ droplets.results }}"
-#
-#  - name: droplets | debug
-#    debug: msg="{{ droplets.results }}"
-#
   - name: droplets | register app IP
     add_host: name="{{ item.droplet.ip_address }}" groups="rolling-update-app"
     when: "'rolling-update-app' in item.droplet.name"
