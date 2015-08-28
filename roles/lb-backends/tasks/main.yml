@@ -7,7 +7,3 @@
 - name: configure fair communications
   template: src="fair.conf.j2" dest="/etc/fair.conf"
 
-- name: configure fair behavior (front end)
-  template: src="fair.j2" dest="/etc/default/fair"
-  nority: restart fair
-

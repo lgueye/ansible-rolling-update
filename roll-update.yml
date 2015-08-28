@@ -1,4 +1,9 @@
 ---
+
+# Sequence:
+# - create instances
+# - register instances in groups
+# - register new instances in the known hosts files for flawless authentication
 - hosts: "localhost"
   connection: "local"
   vars:
@@ -35,16 +40,28 @@
     shell: "ssh-keyscan -H -T 10 {{ item.droplet.ip_address }} >> {{ ssh_known_hosts_file }}"
     with_items: droplets.results
 
+# Sequence:
+# - register sudo user to operate with the instances
 - hosts: "rolling-update-app:lb"
   remote_user: "root"
   roles:
   - {role: "security"}
 
+- hosts: "lb"
+  remote_user: "nodemanager"
+  sudo: "yes"
+  roles:
+  - {role: "lb"}
+
+# Sequence:
+# - clone to assess if deployment is required (check install revision against required one)
 - hosts: "localhost"
   connection: "local"
   roles:
   - {role: "clone-app", rev: "{{ app_rev1 }}" }
 
+# Sequence:
+# - register installed revision on host
 - hosts: "rolling-update-app"
   remote_user: "{{ node_management_user }}"
   sudo: "yes"
@@ -56,32 +73,35 @@
     stat: path="{{ app.node_source_link_path }}/{{ app_rev1 }}/rolling-update-app-api.jar"
     register: "app_rev1_stats"
 
+# Sequence:
+# - deploy app if required
+# - start app
+# - register app as lb node
 - hosts: "rolling-update-app"
   remote_user: "{{ node_management_user }}"
   sudo: "yes"
   roles:
-  - {role: "java"}
-#  - {role: "deploy-app", rev: "{{ app_rev1 }}", when: "app_rev1_stats.stat.exists == false"}
-  - {role: "deploy-app", rev: "{{ app_rev1 }}"}
-  - {role: "start-app"}
+  - {role: "deploy-app", rev: "{{ app_rev1 }}", when: "app_rev1_stats.stat.exists == false"}
+  - {role: "start-app", rev: "{{ app_rev1 }}", when: "app_rev1_stats.stat.exists == false"}
+  - {role: "add-lb-node", rev: "{{ app_rev1 }}", when: "app_rev1_stats.stat.exists == false"}
 
-- hosts: "lb"
-  remote_user: "nodemanager"
-  sudo: "yes"
-  roles:
-  - {role: "lb"}
-
+# Sequence:
+# - test cluster
 - hosts: "localhost"
   connection: "local"
   roles:
   - {role: "test-app"}
 
+# Sequence:
+# - clone to assess need deployment (check install revision against required one)
 - hosts: "rolling-update-app"
   remote_user: "{{ node_management_user }}"
   sudo: "yes"
   roles:
   - {role: "clone-app", rev: "{{ app_rev2 }}"}
 
+# Sequence:
+# - register installed revision on host
 - hosts: "rolling-update-app"
   remote_user: "{{ node_management_user }}"
   sudo: "yes"
@@ -93,13 +113,34 @@
     stat: path="{{ app.node_source_link_path }}/{{ app_rev2 }}/rolling-update-app-api.jar"
     register: "app_rev2_stats"
 
+# Sequence:
+# - unregister app as lb node
+# - stop app
+# - deploy new app revision
+# - start app
+# - register app as lb node
 - hosts: "rolling-update-app"
   remote_user: "{{ node_management_user }}"
   sudo: "yes"
   roles:
-  - {role: "rolling-update", rev: "{{ app_rev2 }}", when: "app_rev2_stats.stat.exists == false"}
-  - {role: "test-app"}
+  - {role: "remove-lb-node", when: "app_rev2_stats.stat.exists == false"}
+  - {role: "stop-app", when: "app_rev2_stats.stat.exists == false"}
+  - {role: "deploy-app", rev: "{{ app_rev2 }}", when: "app_rev2_stats.stat.exists == false"}
+  - {role: "start-app", rev: "{{ app_rev2 }}", when: "app_rev2_stats.stat.exists == false"}
+  - {role: "add-lb-node", rev: "{{ app_rev2 }}", when: "app_rev2_stats.stat.exists == false"}
 
+
+
+
+#- hosts: "rolling-update-app"
+#  remote_user: "{{ node_management_user }}"
+#  sudo: "yes"
+#  roles:
+#  - {role: "rolling-update", rev: "{{ app_rev2 }}", when: "app_rev2_stats.stat.exists == false"}
+
+# Sequence:
+# - test cluster
+# - drop instances
 - hosts: "localhost"
   connection: "local"
   roles:

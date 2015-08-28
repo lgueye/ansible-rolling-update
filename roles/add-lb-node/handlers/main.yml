@@ -1,0 +1,5 @@
+---
+# Ansible Handlers
+
+- name: restart fair
+  action: service name="fair" state="restarted"

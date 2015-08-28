@@ -1,5 +1,5 @@
 ---
 # Ansible Handlers
 
-- name: restart haproxy
-  action: service name=haproxy state=restarted
+- name: restart fair
+  action: service name=fair state=restarted

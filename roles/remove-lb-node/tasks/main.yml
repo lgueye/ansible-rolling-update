@@ -1,0 +1,3 @@
+---
+- name: remove from lb
+  service: name="fair" state="stopped"

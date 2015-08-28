@@ -1,0 +1,6 @@
+# $Id: fair.default 8058 2005-07-07 13:06:53Z guus $
+# $URL: https://infix.uvt.nl/its-id/trunk/sources/fair/package/debian/fair.default $
+
+CARROUSEL=false
+TRANSPONDER=true
+BALANCERS={{ hostvars[groups['lb'][0]]['ansible_eth0']['ipv4']['address'] }}

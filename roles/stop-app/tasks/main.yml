@@ -1,0 +1,4 @@
+---
+# Start app
+- name: ensure service is restarted
+  service: name="rolling-update-app-api" state="stopped"
