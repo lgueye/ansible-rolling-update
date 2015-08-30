@@ -31,7 +31,7 @@ public class DomainService {
         final Long id = sequence.addAndGet(1);
         domain.setId(id);
         Domain persisted = repository.put(id, domain);
-        LOGGER.debug("Saved domain in db : {}", persisted);
+        LOGGER.info("Saved domain in db : {}", persisted);
         return id;
     }
 
@@ -45,17 +45,17 @@ public class DomainService {
 
     public void update(Long id, @NotNull @Valid final Domain domain) {
         repository.put(id, domain);
-        LOGGER.debug("Updated domain in db : {}", domain);
+        LOGGER.info("Updated domain in db : {}", domain);
     }
 
     public void delete(Long id) {
         final Domain domain = repository.get(id);
         repository.remove(domain);
-        LOGGER.debug("Deleted domain from db : {}", id);
+        LOGGER.info("Deleted domain from db : {}", id);
     }
 
     public void delete() {
         repository.clear();
-        LOGGER.debug("Deleted all domains from db");
+        LOGGER.info("Deleted all domains from db");
     }
 }

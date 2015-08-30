@@ -29,14 +29,14 @@ public class DomainsResource {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Void> create(@RequestBody @Valid Domain domain) {
-        LOGGER.debug("Attempt to create domain: {}", domain);
+        LOGGER.info("Attempt to create domain: {}", domain);
         // Save domain and get new id
         Long id = this.service.save(domain);
-        LOGGER.debug("Saved domain with id: {}", id);
+        LOGGER.info("Saved domain with id: {}", id);
 
         // Build URI
         final URI location = ServletUriComponentsBuilder.fromCurrentServletMapping().path("/api/domains/{id}").build().expand(id).toUri();
-        LOGGER.debug("New resource can be found at : {}", location.toString());
+        LOGGER.info("New resource can be found at : {}", location.toString());
 
         // Add uri location
         final HttpHeaders headers = new HttpHeaders();
@@ -48,7 +48,7 @@ public class DomainsResource {
 
     @RequestMapping(method = RequestMethod.GET)
     public List<Domain> findAll() {
-        LOGGER.debug("Searching all domains");
+        LOGGER.info("Searching all domains");
         return this.service.findAll();
     }
 
@@ -57,10 +57,10 @@ public class DomainsResource {
         Domain domain = this.service.getOne(id);
         if (domain == null) {
             final String message = "Domain with id {" + id + "} was not found";
-            LOGGER.debug(message);
+            LOGGER.info(message);
             throw new ResourceNotFoundException(message);
         }
-        LOGGER.debug("Found domain with id: {}", id);
+        LOGGER.info("Found domain with id: {}", id);
         return domain;
     }
 
@@ -68,14 +68,14 @@ public class DomainsResource {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void update(@PathVariable("id") Long id, @RequestBody @Valid Domain domain) {
         service.update(id, domain);
-        LOGGER.debug("Updated domain with id: {}", id);
+        LOGGER.info("Updated domain with id: {}", id);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Long id) {
         this.service.delete(id);
-        LOGGER.debug("Deleted domain with id: {}", id);
+        LOGGER.info("Deleted domain with id: {}", id);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -87,6 +87,6 @@ public class DomainsResource {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delete() {
         this.service.delete();
-        LOGGER.debug("Deleted all domains");
+        LOGGER.info("Deleted all domains");
     }
 }

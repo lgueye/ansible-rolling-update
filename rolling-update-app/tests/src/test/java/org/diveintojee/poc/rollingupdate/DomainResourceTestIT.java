@@ -41,13 +41,13 @@ public class DomainResourceTestIT {
         List<URI> uriList = Lists.newArrayList();
         for (Domain domain : detachedList) {
             final URI uri = api.createDomain(domain);
-            LOGGER.debug("Created URI {}", uri);
+            LOGGER.info("Created URI {}", uri);
             assertNotNull(uri);
             uriList.add(uri);
         }
         List<Domain> persistedList = Lists.newArrayList();
         for (URI uri : uriList) {
-            LOGGER.debug("Loading URI {}", uri);
+            LOGGER.info("Loading URI {}", uri);
             final Domain persisted = api.loadDomain(uri);
             assertNotNull(persisted);
             persistedList.add(persisted);
@@ -78,12 +78,12 @@ public class DomainResourceTestIT {
         for (int i = 0; i < countInstances; i++) {
             final Domain domain = copyFromPersisted.get(i);
             final URI uri = uriList.get(i);
-            LOGGER.debug("Updating URI {} with {} ", uri, domain);
+            LOGGER.info("Updating URI {} with {} ", uri, domain);
             api.updateDomain(uri, domain);
         }
         List<Domain> updatedList = Lists.newArrayList();
         for (URI uri : uriList) {
-            LOGGER.debug("Deleting URI {}", uri);
+            LOGGER.info("Deleting URI {}", uri);
             final Domain updated = api.loadDomain(uri);
             assertNotNull(updated);
             updatedList.add(updated);
