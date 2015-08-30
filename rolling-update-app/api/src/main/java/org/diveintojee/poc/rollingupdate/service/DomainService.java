@@ -23,7 +23,7 @@ public class DomainService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DomainService.class);
 
-    private Map<Long, Domain> repository = Maps.newConcurrentMap();
+    private Map<Long, Domain> repository = Maps.newHashMap();
 
     private AtomicLong sequence = new AtomicLong();
 

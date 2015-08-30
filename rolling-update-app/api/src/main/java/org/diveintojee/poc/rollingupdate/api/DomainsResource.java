@@ -52,12 +52,6 @@ public class DomainsResource {
         return this.service.findAll();
     }
 
-//    @RequestMapping(value = "/search", method = RequestMethod.GET)
-//    public List<Domain> search(@RequestParam("q") String query) {
-//        LOGGER.debug("Searching domains for which title or description or newField contains {}", query);
-//        return this.service.search(query);
-//    }
-//
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Domain get(@PathVariable("id") Long id) {
         Domain domain = this.service.getOne(id);
@@ -95,13 +89,4 @@ public class DomainsResource {
         this.service.delete();
         LOGGER.debug("Deleted all domains");
     }
-
-//    @RequestMapping(value = "/index/refresh", method = RequestMethod.POST)
-//    public ResponseEntity<Void> refreshIndex() throws ExecutionException, InterruptedException {
-//        this.service.refreshIndex("domains");
-//        LOGGER.debug("Refreshing index");
-//
-//        // Add header to response
-//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//    }
 }
