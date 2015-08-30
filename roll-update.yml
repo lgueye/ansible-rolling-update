@@ -47,12 +47,6 @@
   roles:
   - {role: "security"}
 
-- hosts: "lb"
-  remote_user: "nodemanager"
-  sudo: "yes"
-  roles:
-  - {role: "lb"}
-
 # Sequence:
 # - clone to assess if deployment is required (check install revision against required one)
 - hosts: "localhost"
@@ -86,6 +80,14 @@
   - {role: "add-lb-node", rev: "{{ app_rev1 }}", when: "app_rev1_stats.stat.exists == false"}
 
 # Sequence:
+# - install fair carrousel
+- hosts: "lb"
+  remote_user: "nodemanager"
+  sudo: "yes"
+  roles:
+  - {role: "lb"}
+
+# Sequence:
 # - test cluster
 - hosts: "localhost"
   connection: "local"
@@ -94,24 +96,25 @@
 
 # Sequence:
 # - clone to assess need deployment (check install revision against required one)
-- hosts: "rolling-update-app"
-  remote_user: "{{ node_management_user }}"
-  sudo: "yes"
-  roles:
-  - {role: "clone-app", rev: "{{ app_rev2 }}"}
+#- hosts: "rolling-update-app"
+#  remote_user: "{{ node_management_user }}"
+#  sudo: "yes"
+#  roles:
+#  - {role: "clone-app", rev: "{{ app_rev2 }}"}
 
 # Sequence:
 # - register installed revision on host
-- hosts: "rolling-update-app"
-  remote_user: "{{ node_management_user }}"
-  sudo: "yes"
-  vars_files:
-  - "roles/shared/vars/main.yml"
 
-  tasks:
-  - name: application | register stats for source link
-    stat: path="{{ app.node_source_link_path }}/{{ app_rev2 }}/rolling-update-app-api.jar"
-    register: "app_rev2_stats"
+#- hosts: "rolling-update-app"
+#  remote_user: "{{ node_management_user }}"
+#  sudo: "yes"
+#  vars_files:
+#  - "roles/shared/vars/main.yml"
+#
+#  tasks:
+#  - name: application | register stats for source link
+#    stat: path="{{ app.node_source_link_path }}/{{ app_rev2 }}/rolling-update-app-api.jar"
+#    register: "app_rev2_stats"
 
 # Sequence:
 # - unregister app as lb node
@@ -119,18 +122,16 @@
 # - deploy new app revision
 # - start app
 # - register app as lb node
-- hosts: "rolling-update-app"
-  remote_user: "{{ node_management_user }}"
-  sudo: "yes"
-  roles:
-  - {role: "remove-lb-node", when: "app_rev2_stats.stat.exists == false"}
-  - {role: "stop-app", when: "app_rev2_stats.stat.exists == false"}
-  - {role: "deploy-app", rev: "{{ app_rev2 }}", when: "app_rev2_stats.stat.exists == false"}
-  - {role: "start-app", rev: "{{ app_rev2 }}", when: "app_rev2_stats.stat.exists == false"}
-  - {role: "add-lb-node", rev: "{{ app_rev2 }}", when: "app_rev2_stats.stat.exists == false"}
 
-
-
+#- hosts: "rolling-update-app"
+#  remote_user: "{{ node_management_user }}"
+#  sudo: "yes"
+#  roles:
+#  - {role: "remove-lb-node", when: "app_rev2_stats.stat.exists == false"}
+#  - {role: "stop-app", when: "app_rev2_stats.stat.exists == false"}
+#  - {role: "deploy-app", rev: "{{ app_rev2 }}", when: "app_rev2_stats.stat.exists == false"}
+#  - {role: "start-app", rev: "{{ app_rev2 }}"}
+#  - {role: "add-lb-node", rev: "{{ app_rev2 }}"}
 
 #- hosts: "rolling-update-app"
 #  remote_user: "{{ node_management_user }}"
@@ -141,12 +142,13 @@
 # Sequence:
 # - test cluster
 # - drop instances
-- hosts: "localhost"
-  connection: "local"
-  roles:
-  - {role: "test-app"}
 
-  tasks:
-  - name:  droplets | delete
-    digital_ocean: state="deleted" command="droplet" id="{{ item.droplet.id }}" ssh_key_ids="625455" wait_timeout="500"
-    with_items: droplets.results
+#- hosts: "localhost"
+#  connection: "local"
+#  roles:
+#  - {role: "test-app"}
+#
+#  tasks:
+#  - name:  droplets | delete
+#    digital_ocean: state="deleted" command="droplet" id="{{ item.droplet.id }}" ssh_key_ids="625455" wait_timeout="500"
+#    with_items: droplets.results

@@ -28,7 +28,7 @@ public class DomainService {
     private AtomicLong sequence = new AtomicLong();
 
     public Long save(@NotNull @Valid final Domain domain) {
-        final long id = sequence.addAndGet(1);
+        final Long id = sequence.addAndGet(1);
         domain.setId(id);
         Domain persisted = repository.put(id, domain);
         LOGGER.debug("Saved domain in db : {}", persisted);

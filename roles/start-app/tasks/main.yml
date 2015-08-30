@@ -4,4 +4,4 @@
   service: name="rolling-update-app-api" state="restarted"
 
 - name: unix service | wait for port to be up
-  wait_for: port="{{ app.port }}" delay="5" timeout="15"
+  wait_for: port="{{ app.port }}" delay="5" timeout="20"

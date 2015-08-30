@@ -1,4 +1,7 @@
 ---
 - name: configure fair behavior (back end)
   template: src="fair.j2" dest="/etc/default/fair"
-  notify: restart fair
+
+# Start fair carrousel
+- name: ensure service is restarted
+  service: name="fair" state="restarted"
