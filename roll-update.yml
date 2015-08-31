@@ -99,9 +99,8 @@
 
 # Sequence:
 # - clone to assess need deployment (check install revision against required one)
-- hosts: "rolling-update-app"
-  remote_user: "{{ node_management_user }}"
-  sudo: "yes"
+- hosts: "localhost"
+  connection: "local"
   roles:
   - {role: "clone-app", rev: "{{ app_rev2 }}"}
 
@@ -129,8 +128,12 @@
   remote_user: "{{ node_management_user }}"
   sudo: "yes"
   roles:
-  - {role: "remove-lb-node", when: "app_rev2_stats.stat.exists == false"}
-  - {role: "deploy-app", rev: "{{ app_rev2 }}", when: "app_rev2_stats.stat.exists == false"}
+#  - {role: "remove-lb-node", when: "app_rev2_stats.stat.exists == false"}
+#  - {role: "deploy-app", rev: "{{ app_rev2 }}", when: "app_rev2_stats.stat.exists == false"}
+#  - {role: "start-app", rev: "{{ app_rev2 }}"}
+#  - {role: "add-lb-node", rev: "{{ app_rev2 }}"}
+  - {role: "remove-lb-node"}
+  - {role: "deploy-app", rev: "{{ app_rev2 }}"}
   - {role: "start-app", rev: "{{ app_rev2 }}"}
   - {role: "add-lb-node", rev: "{{ app_rev2 }}"}
 
