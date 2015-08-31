@@ -2,7 +2,7 @@
 
 # Stop app
 - name: stop app
-  service: name="rolling-update-app-api" state="stopped"
+  shell: "pkill java"
   ignore_errors: yes
 
 - name: unix service | copy config

@@ -7,6 +7,9 @@
 - name: configure fair communications
   template: src="fair.conf.j2" dest="/etc/fair.conf"
 
+- name: configure fair behavior (front end = carrousel)
+  template: src="fair.j2" dest="/etc/default/fair"
+
 # Start fair carrousel
 - name: ensure service is restarted
   service: name="fair" state="restarted"

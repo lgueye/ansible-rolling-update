@@ -1,5 +1,5 @@
 ---
-- name: configure fair behavior (back end)
+- name: configure fair behavior (back end = transponder)
   template: src="fair.j2" dest="/etc/default/fair"
 
 # Start fair carrousel
