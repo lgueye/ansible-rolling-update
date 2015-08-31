@@ -144,14 +144,16 @@
 
 # Sequence:
 # - test cluster
-# - drop instances
 
 #- hosts: "localhost"
 #  connection: "local"
 #  roles:
 #  - {role: "test-app"}
-#
-#  tasks:
-#  - name:  droplets | delete
-#    digital_ocean: state="deleted" command="droplet" id="{{ item.droplet.id }}" ssh_key_ids="625455" wait_timeout="500"
-#    with_items: droplets.results
+
+ Sequence:
+ - drop instances
+
+  tasks:
+  - name:  droplets | delete
+    digital_ocean: state="deleted" command="droplet" id="{{ item.droplet.id }}" ssh_key_ids="625455" wait_timeout="500"
+    with_items: droplets.results

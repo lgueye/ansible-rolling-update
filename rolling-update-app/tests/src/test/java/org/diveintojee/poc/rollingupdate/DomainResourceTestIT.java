@@ -19,7 +19,9 @@ public class DomainResourceTestIT {
 
     @Test
     public void sumShouldSucceed() throws IOException {
-        Double actual  = api.sum(1d, 2d);
-        assertEquals(Double.valueOf(3), actual);
+        for (int i = 0; i < 20;  i++) {
+            Double actual  = api.sum(1d, 2d);
+            assertEquals(Double.valueOf(3), actual);
+        }
     }
 }
