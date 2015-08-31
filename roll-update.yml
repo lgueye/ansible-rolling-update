@@ -145,6 +145,7 @@
 # Sequence:
 # - test cluster
 
+
 #- hosts: "localhost"
 #  connection: "local"
 #  roles:
@@ -152,6 +153,8 @@
 
 # Sequence:
 # - drop instances
+- hosts: "localhost"
+  connection: "local"
 
   tasks:
   - name:  droplets | delete
