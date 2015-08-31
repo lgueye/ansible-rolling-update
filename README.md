@@ -1,2 +1,2 @@
 # ansible-rolling-update
-ansible-playbook -i /etc/ansible/hosts -e "app_rev1=a79bdd8 app_rev2=a79bdd8" roll-update.yml
+ansible-playbook -i /etc/ansible/hosts -e "app_rev1=d0ea0fd app_rev2=d0ea0fd" roll-update.yml

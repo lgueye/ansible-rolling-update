@@ -19,25 +19,4 @@ public class RollingUpdateTestConfig {
         return new PropertySourcesPlaceholderConfigurer();
     }
 
-//    @Bean
-//    public RestOperations buildRestTemplate() {
-//        RestTemplate restTemplate = new RestTemplate();
-//        restTemplate.getMessageConverters().add(0, mappingJacksonHttpMessageConverter());
-//        return restTemplate;
-//    }
-
-//    @Bean
-//    public MappingJackson2HttpMessageConverter mappingJacksonHttpMessageConverter() {
-//        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-//        converter.setObjectMapper(jacksonSerializer());
-//        return converter;
-//    }
-//
-//    @Bean
-//    public ObjectMapper jacksonSerializer() {
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        objectMapper.configure(INDENT_OUTPUT, true);
-//        objectMapper.configure(FAIL_ON_UNKNOWN_PROPERTIES, false);
-//        return objectMapper;
-//    }
 }
