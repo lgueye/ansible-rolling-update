@@ -150,8 +150,8 @@
 #  roles:
 #  - {role: "test-app"}
 
- Sequence:
- - drop instances
+# Sequence:
+# - drop instances
 
   tasks:
   - name:  droplets | delete
