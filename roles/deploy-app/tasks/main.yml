@@ -3,12 +3,6 @@
 - name: application | create deploy dir if source link does not exist
   file: state="directory" dest="{{ app.node_source_link_path }}/{{ rev }}"
 
-- name: application | unlink target link
-  file: state="absent" dest="{{ app.node_target_link_path }}"
-
-- name: application | link target link
-  file: state="link" src="{{ app.node_source_link_path }}/{{ rev }}" dest="{{ app.node_target_link_path }}"
-
 - name: application | copy jar
   copy: src="{{ app.local_app_path }}/api/target/rolling-update-app-api.jar" dest="{{ app.node_target_link_path }}/"
 
@@ -23,6 +17,13 @@
 
 - name: unix service | copy init script
   template: src="rolling-update-app-api.j2" dest="/etc/init.d/rolling-update-app-api" mode="u=xrw,g=xr,o=r"
+
+- name: application | unlink target link
+  file: state="absent" dest="{{ app.node_target_link_path }}"
+
+- name: application | link target link
+  file: state="link" src="{{ app.node_source_link_path }}/{{ rev }}" dest="{{ app.node_target_link_path }}"
+
 
 #- name: unix service | copy init script
 #  copy: src="rolling-update-app-api" dest="/etc/init.d/" mode="u=xrw,g=xr,o=r"

@@ -7,7 +7,6 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>domain</module>
         <module>api</module>
         <module>tests</module>
     </modules>
