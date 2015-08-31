@@ -14,8 +14,6 @@
         <java.version>1.7</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <guava.version>17.0</guava.version>
-        <commons-lang3.version>3.3.2</commons-lang3.version>
         <spring-boot.version>1.1.9.RELEASE</spring-boot.version>
         <spring.version>4.1.0.RELEASE</spring.version>
         <maven-release-plugin.version>2.2.1</maven-release-plugin.version>
@@ -28,25 +26,10 @@
         <maven-shade-plugin.version>2.2</maven-shade-plugin.version>
         <maven-surefire-plugin.version>2.15</maven-surefire-plugin.version>
         <maven-war-plugin.version>2.4</maven-war-plugin.version>
+        <rest-assured.version>2.3.2</rest-assured.version>
     </properties>
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>${commons-lang3.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.diveintojee.poc.digitaloceancluster</groupId>
-                <artifactId>rolling-update-app-domain</artifactId>
-                <version>${project.parent.version}</version>
-            </dependency>
             <dependency>
                 <groupId>org.diveintojee.poc.digitaloceancluster</groupId>
                 <artifactId>rolling-update-app-api</artifactId>
@@ -91,13 +74,15 @@
                 <version>${spring-boot.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>com.jayway.restassured</groupId>
+                <artifactId>rest-assured</artifactId>
+                <version>${rest-assured.version}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
     </dependencies>
     <build>
         <!-- Turn on filtering by default for application properties -->
