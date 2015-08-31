@@ -9,9 +9,14 @@
 - name: unix service | copy init script
   template: src="rolling-update-app-api.j2" dest="/etc/init.d/rolling-update-app-api" mode="u=xrw,g=xr,o=r"
 
+# Stop app
+- name: ensure service is restarted
+  service: name="rolling-update-app-api" state="stopped"
+  ignore_errors: yes
+
 # Start app
 - name: ensure service is restarted
-  service: name="rolling-update-app-api" state="restarted"
+  service: name="rolling-update-app-api" state="start"
 
 - name: unix service | wait for port to be up
   wait_for: port="{{ app.port }}" delay="5" timeout="20"
