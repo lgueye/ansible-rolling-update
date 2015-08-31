@@ -1,5 +1,10 @@
 ---
 
+# Stop app
+- name: stop app
+  service: name="rolling-update-app-api" state="stopped"
+  ignore_errors: yes
+
 - name: application | unlink target link
   file: state="absent" dest="{{ app.node_target_link_path }}"
 
@@ -9,10 +14,6 @@
 - name: unix service | copy init script
   template: src="rolling-update-app-api.j2" dest="/etc/init.d/rolling-update-app-api" mode="u=xrw,g=xr,o=r"
 
-# Stop app
-- name: ensure service is restarted
-  service: name="rolling-update-app-api" state="stopped"
-  ignore_errors: yes
 
 # Start app
 - name: pause
@@ -20,7 +21,7 @@
 
 # Start app
 - name: ensure service is restarted
-  service: name="rolling-update-app-api" state="started"
+  service: name="rolling-update-app-api" state="restarted"
 
 - name: unix service | wait for port to be up
   wait_for: port="{{ app.port }}" delay="5" timeout="20"
