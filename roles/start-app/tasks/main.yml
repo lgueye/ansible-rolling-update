@@ -1,4 +1,14 @@
 ---
+
+- name: application | unlink target link
+  file: state="absent" dest="{{ app.node_target_link_path }}"
+
+- name: application | link target link
+  file: state="link" src="{{ app.node_source_link_path }}/{{ rev }}" dest="{{ app.node_target_link_path }}"
+
+- name: unix service | copy init script
+  template: src="rolling-update-app-api.j2" dest="/etc/init.d/rolling-update-app-api" mode="u=xrw,g=xr,o=r"
+
 # Start app
 - name: ensure service is restarted
   service: name="rolling-update-app-api" state="restarted"

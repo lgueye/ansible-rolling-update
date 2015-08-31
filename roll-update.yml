@@ -75,9 +75,12 @@
   remote_user: "{{ node_management_user }}"
   sudo: "yes"
   roles:
-  - {role: "deploy-app", rev: "{{ app_rev1 }}", when: "app_rev1_stats.stat.exists == false"}
-  - {role: "start-app", rev: "{{ app_rev1 }}", when: "app_rev1_stats.stat.exists == false"}
-  - {role: "add-lb-node", rev: "{{ app_rev1 }}", when: "app_rev1_stats.stat.exists == false"}
+#  - {role: "deploy-app", rev: "{{ app_rev1 }}", when: "app_rev1_stats.stat.exists == false"}
+#  - {role: "start-app", rev: "{{ app_rev1 }}", when: "app_rev1_stats.stat.exists == false"}
+#  - {role: "add-lb-node", rev: "{{ app_rev1 }}", when: "app_rev1_stats.stat.exists == false"}
+  - {role: "deploy-app", rev: "{{ app_rev1 }}"}
+  - {role: "start-app", rev: "{{ app_rev1 }}"}
+  - {role: "add-lb-node", rev: "{{ app_rev1 }}"}
 
 # Sequence:
 # - install fair carrousel
