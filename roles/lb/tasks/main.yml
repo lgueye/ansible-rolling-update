@@ -12,4 +12,4 @@
   service: name="fair" state="restarted"
 
 - name: unix service | wait for port to be up
-  wait_for: port="{{ lb.port }}" delay="5" timeout="10"
+  wait_for: port="{{ lb.port }}" delay="5" timeout="15"

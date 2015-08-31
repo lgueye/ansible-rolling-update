@@ -12,6 +12,4 @@
 - name: application | copy log config
   copy: src="{{ app.local_app_path }}/api/target/classes/logback.xml" dest="{{ app.node_source_link_path }}/{{ rev }}/"
 
-- name: unix service | copy config
-  copy: src="{{ app.local_app_path }}/api/target/classes/rolling-update-app-api.sh" dest="{{ app.node_source_link_path }}/{{ rev }}/" mode="u=xrw,g=xr,o=r"
 

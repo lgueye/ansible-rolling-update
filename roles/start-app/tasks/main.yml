@@ -5,6 +5,9 @@
   service: name="rolling-update-app-api" state="stopped"
   ignore_errors: yes
 
+- name: unix service | copy config
+  copy: src="{{ app.local_app_path }}/api/target/classes/rolling-update-app-api.sh" dest="{{ app.node_source_link_path }}/{{ rev }}/" mode="u=xrw,g=xr,o=r"
+
 - name: application | unlink target link
   file: state="absent" dest="{{ app.node_target_link_path }}"
 
