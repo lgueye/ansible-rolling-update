@@ -5,6 +5,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.web.client.RestOperations;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * @author louis.gueye@gmail.com
@@ -19,4 +21,8 @@ public class RollingUpdateTestConfig {
         return new PropertySourcesPlaceholderConfigurer();
     }
 
+    @Bean
+    RestOperations restOperation() {
+        return new RestTemplate();
+    }
 }
