@@ -99,25 +99,24 @@
 
 # Sequence:
 # - clone to assess need deployment (check install revision against required one)
-#- hosts: "rolling-update-app"
-#  remote_user: "{{ node_management_user }}"
-#  sudo: "yes"
-#  roles:
-#  - {role: "clone-app", rev: "{{ app_rev2 }}"}
+- hosts: "rolling-update-app"
+  remote_user: "{{ node_management_user }}"
+  sudo: "yes"
+  roles:
+  - {role: "clone-app", rev: "{{ app_rev2 }}"}
 
 # Sequence:
 # - register installed revision on host
+- hosts: "rolling-update-app"
+  remote_user: "{{ node_management_user }}"
+  sudo: "yes"
+  vars_files:
+  - "roles/shared/vars/main.yml"
 
-#- hosts: "rolling-update-app"
-#  remote_user: "{{ node_management_user }}"
-#  sudo: "yes"
-#  vars_files:
-#  - "roles/shared/vars/main.yml"
-#
-#  tasks:
-#  - name: application | register stats for source link
-#    stat: path="{{ app.node_source_link_path }}/{{ app_rev2 }}/rolling-update-app-api.jar"
-#    register: "app_rev2_stats"
+  tasks:
+  - name: application | register stats for source link
+    stat: path="{{ app.node_source_link_path }}/{{ app_rev2 }}/rolling-update-app-api.jar"
+    register: "app_rev2_stats"
 
 # Sequence:
 # - unregister app as lb node
@@ -126,15 +125,14 @@
 # - start app
 # - register app as lb node
 
-#- hosts: "rolling-update-app"
-#  remote_user: "{{ node_management_user }}"
-#  sudo: "yes"
-#  roles:
-#  - {role: "remove-lb-node", when: "app_rev2_stats.stat.exists == false"}
-#  - {role: "stop-app", when: "app_rev2_stats.stat.exists == false"}
-#  - {role: "deploy-app", rev: "{{ app_rev2 }}", when: "app_rev2_stats.stat.exists == false"}
-#  - {role: "start-app", rev: "{{ app_rev2 }}"}
-#  - {role: "add-lb-node", rev: "{{ app_rev2 }}"}
+- hosts: "rolling-update-app"
+  remote_user: "{{ node_management_user }}"
+  sudo: "yes"
+  roles:
+  - {role: "remove-lb-node", when: "app_rev2_stats.stat.exists == false"}
+  - {role: "deploy-app", rev: "{{ app_rev2 }}", when: "app_rev2_stats.stat.exists == false"}
+  - {role: "start-app", rev: "{{ app_rev2 }}"}
+  - {role: "add-lb-node", rev: "{{ app_rev2 }}"}
 
 #- hosts: "rolling-update-app"
 #  remote_user: "{{ node_management_user }}"
@@ -144,12 +142,10 @@
 
 # Sequence:
 # - test cluster
-
-
-#- hosts: "localhost"
-#  connection: "local"
-#  roles:
-#  - {role: "test-app"}
+- hosts: "localhost"
+  connection: "local"
+  roles:
+  - {role: "test-app"}
 
 # Sequence:
 # - drop instances

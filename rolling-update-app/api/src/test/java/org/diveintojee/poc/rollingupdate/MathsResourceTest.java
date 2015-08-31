@@ -28,4 +28,16 @@ public class MathsResourceTest {
                 statusCode(HttpStatus.SC_OK).
                 body(Matchers.equalTo(expected.toString()));
     }
+
+    @Test
+    public void powerShouldSucceed() {
+        Double a = 2d;
+        Double b = 5d;
+        Double expected = 32d;
+        when().
+                get("/api/maths/power/{a}/{b}", a, b).
+                then().
+                statusCode(HttpStatus.SC_OK).
+                body(Matchers.equalTo(expected.toString()));
+    }
 }

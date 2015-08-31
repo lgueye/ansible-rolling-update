@@ -1,4 +1,5 @@
 ---
 # Start app
-- name: ensure service is restarted
-  service: name="rolling-update-app-api" state="stopped"
+- name: stop app
+  shell: "pkill java"
+  ignore_errors: yes

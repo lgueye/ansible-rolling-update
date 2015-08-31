@@ -31,4 +31,11 @@ public class RollingUpdateAppClient {
         return responseEntity.getBody();
 
     }
+
+    public Double power(double a, double b) {
+        ResponseEntity<Double> responseEntity = restTemplate.getForEntity(getResourceLocation() + "/power/" + a + "/" + b, Double.class);
+        assertNotNull(responseEntity);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        return responseEntity.getBody();
+    }
 }

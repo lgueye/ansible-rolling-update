@@ -29,4 +29,12 @@ public class MathsResource {
         return result;
     }
 
+    @RequestMapping(value = "/power/{a}/{b}", method = RequestMethod.GET)
+    public Double power(@PathVariable("a") Double a, @PathVariable("b") Double b) {
+        LOGGER.info("Computing power for {} {}", a, b);
+        Double result = this.service.power(a, b);
+        LOGGER.info("Result for power({}, {}) = {}", a, b, result);
+        return result;
+    }
+
 }

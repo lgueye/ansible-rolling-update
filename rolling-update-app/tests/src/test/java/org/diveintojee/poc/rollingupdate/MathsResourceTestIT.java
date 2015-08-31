@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {RollingUpdateTestConfig.class})
-public class DomainResourceTestIT {
+public class MathsResourceTestIT {
 
     @Autowired
     private RollingUpdateAppClient api;
@@ -22,6 +22,14 @@ public class DomainResourceTestIT {
         for (int i = 0; i < 20;  i++) {
             Double actual  = api.sum(1d, 2d);
             assertEquals(Double.valueOf(3), actual);
+        }
+    }
+
+    @Test
+    public void powerShouldSucceed() throws IOException {
+        for (int i = 0; i < 20;  i++) {
+            Double actual  = api.power(2d, 5d);
+            assertEquals(Double.valueOf(32), actual);
         }
     }
 }
