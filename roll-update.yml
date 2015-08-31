@@ -4,6 +4,7 @@
 # - create instances
 # - register instances in groups
 # - register new instances in the known hosts files for flawless authentication
+
 - hosts: "localhost"
   connection: "local"
   vars:
@@ -42,6 +43,7 @@
 
 # Sequence:
 # - register sudo user to operate with the instances
+
 - hosts: "rolling-update-app:lb"
   remote_user: "root"
   roles:
@@ -49,6 +51,7 @@
 
 # Sequence:
 # - clone to assess if deployment is required (check install revision against required one)
+
 - hosts: "localhost"
   connection: "local"
   roles:
@@ -56,6 +59,7 @@
 
 # Sequence:
 # - register installed revision on host
+
 - hosts: "rolling-update-app"
   remote_user: "{{ node_management_user }}"
   sudo: "yes"
@@ -71,19 +75,18 @@
 # - deploy app if required
 # - start app
 # - register app as lb node
+
 - hosts: "rolling-update-app"
   remote_user: "{{ node_management_user }}"
   sudo: "yes"
   roles:
-#  - {role: "deploy-app", rev: "{{ app_rev1 }}", when: "app_rev1_stats.stat.exists == false"}
-#  - {role: "start-app", rev: "{{ app_rev1 }}", when: "app_rev1_stats.stat.exists == false"}
-#  - {role: "add-lb-node", rev: "{{ app_rev1 }}", when: "app_rev1_stats.stat.exists == false"}
   - {role: "deploy-app", rev: "{{ app_rev1 }}"}
   - {role: "start-app", rev: "{{ app_rev1 }}"}
   - {role: "add-lb-node", rev: "{{ app_rev1 }}"}
 
 # Sequence:
 # - install fair carrousel
+
 - hosts: "lb"
   remote_user: "nodemanager"
   sudo: "yes"
@@ -92,6 +95,7 @@
 
 # Sequence:
 # - test cluster
+
 - hosts: "localhost"
   connection: "local"
   roles:
@@ -99,6 +103,7 @@
 
 # Sequence:
 # - clone to assess need deployment (check install revision against required one)
+
 - hosts: "localhost"
   connection: "local"
   roles:
@@ -106,6 +111,7 @@
 
 # Sequence:
 # - register installed revision on host
+
 - hosts: "rolling-update-app"
   remote_user: "{{ node_management_user }}"
   sudo: "yes"
@@ -128,23 +134,14 @@
   remote_user: "{{ node_management_user }}"
   sudo: "yes"
   roles:
-#  - {role: "remove-lb-node", when: "app_rev2_stats.stat.exists == false"}
-#  - {role: "deploy-app", rev: "{{ app_rev2 }}", when: "app_rev2_stats.stat.exists == false"}
-#  - {role: "start-app", rev: "{{ app_rev2 }}"}
-#  - {role: "add-lb-node", rev: "{{ app_rev2 }}"}
   - {role: "remove-lb-node"}
   - {role: "deploy-app", rev: "{{ app_rev2 }}"}
   - {role: "start-app", rev: "{{ app_rev2 }}"}
   - {role: "add-lb-node", rev: "{{ app_rev2 }}"}
 
-#- hosts: "rolling-update-app"
-#  remote_user: "{{ node_management_user }}"
-#  sudo: "yes"
-#  roles:
-#  - {role: "rolling-update", rev: "{{ app_rev2 }}", when: "app_rev2_stats.stat.exists == false"}
-
 # Sequence:
 # - test cluster
+
 - hosts: "localhost"
   connection: "local"
   roles:
@@ -152,6 +149,7 @@
 
 # Sequence:
 # - drop instances
+
 - hosts: "localhost"
   connection: "local"
 

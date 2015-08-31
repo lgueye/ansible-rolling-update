@@ -1,5 +1,0 @@
----
-# Start app
-- name: stop app
-  shell: "pkill java"
-  ignore_errors: yes
