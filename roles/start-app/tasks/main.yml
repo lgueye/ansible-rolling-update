@@ -15,8 +15,12 @@
   ignore_errors: yes
 
 # Start app
+- name: pause
+  pause: seconds="2"
+
+# Start app
 - name: ensure service is restarted
-  service: name="rolling-update-app-api" state="start"
+  service: name="rolling-update-app-api" state="started"
 
 - name: unix service | wait for port to be up
   wait_for: port="{{ app.port }}" delay="5" timeout="20"
